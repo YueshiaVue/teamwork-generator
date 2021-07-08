@@ -46,6 +46,7 @@ const addEmployee = (position) => {
             name: "info"
         },
     ]).then( (addedEmployee) => {
+        addedEmployee["position"] = position    // Added key of value into object
         globalTeam.addToTeam(addedEmployee);
     });
 }
@@ -61,14 +62,58 @@ function nextPrompt (){
     ]).then( (position) => {
         if (position === "No") {
             // build HTML here later
-
-            
+            generateHTML(globalTeam.getTeam());
         } else {
             addEmployee(position);
             nextPrompt ();    
         }
     });
 }
+
+function generateHTML (teams) {
+
+    let elements = teams.forEach( ({name,id,info,email,position}) => {
+        let infoType = '';
+        switch(position) {
+            case 'Manager':
+                infoType = 'Office Number'
+                break;
+            case 'Engineer':
+                infoType = '';
+                break;
+            default:
+                infoType = '';
+                break;
+        }
+        return `
+        <div class="col-md-3">
+            <h1> ${position}: ${name}</h1>
+            <h2> ID: ${id}</h2>
+            <h2> Email: ${email}</h2>
+            <h2> ${infortype}: ${info}</h2>
+        </div>`;
+    });
+
+    return `<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+      <title>Document</title>
+    </head>
+    <body>
+      <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <div class="row">
+            ${elements}
+        </div>
+      </div>
+    </div>
+    </body>
+    </html>`;
+}
+  
 
 addEmployee('Manager');
 nextPrompt();
