@@ -27,17 +27,17 @@ const addEmployee = (position) => {
     inquirer.prompt([
         {
             type: "input",
-            message: "What is the team manager's name?",
+            message: `What is the ${position}'s name?`,
             name: "name"
         },
         {
             type: "input",
-            message: "What is the team manager's employee ID?",
+            message: `What is the ${postion}'s employee ID?`,
             name: "id"
         },
         {
             type: "input",
-            message: "What is the team manager's email address?",
+            message: `What is the ${position}'s email address?`,
             name: "email"
         },
         {
@@ -47,7 +47,28 @@ const addEmployee = (position) => {
         },
     ]).then( (addedEmployee) => {
         globalTeam.addToTeam(addedEmployee);
-        start();
     });
 }
 
+function nextPrompt (){
+    inquirer.prompt([
+        {
+            type: "list",
+            message: "Do you want to add an engineer or intern to your team?",
+            choices: [ "Engineer", "Intern", "No" ],
+            name: "position"
+        },
+    ]).then( (position) => {
+        if (position === "No") {
+            // build HTML here later
+
+            
+        } else {
+            addEmployee(position);
+            nextPrompt ();    
+        }
+    });
+}
+
+addEmployee('Manager');
+nextPrompt();
