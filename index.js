@@ -32,7 +32,7 @@ const addEmployee = (position) => {
         },
         {
             type: "input",
-            message: `What is the ${postion}'s employee ID?`,
+            message: `What is the ${position}'s employee ID?`,
             name: "id"
         },
         {
@@ -48,6 +48,7 @@ const addEmployee = (position) => {
     ]).then( (addedEmployee) => {
         addedEmployee["position"] = position    // Added key of value into object
         globalTeam.addToTeam(addedEmployee);
+        nextPrompt();
     });
 }
 
@@ -59,38 +60,42 @@ function nextPrompt (){
             choices: [ "Engineer", "Intern", "No" ],
             name: "position"
         },
-    ]).then( (position) => {
+    ]).then( ({position}) => {
         if (position === "No") {
-            // build HTML here later
-            generateHTML(globalTeam.getTeam());
+            let html = generateHTML(globalTeam.getTeam());
+            fs.writeFileSync('index.html', html);
+            console.log(html)
         } else {
             addEmployee(position);
-            nextPrompt ();    
         }
     });
 }
 
 function generateHTML (teams) {
-
-    let elements = teams.forEach( ({name,id,info,email,position}) => {
+    console.log(teams)
+    let elements = teams.map( ({name,id,info,email,position}) => {
         let infoType = '';
         switch(position) {
             case 'Manager':
                 infoType = 'Office Number'
                 break;
             case 'Engineer':
-                infoType = '';
+                infoType = 'GitHub';
                 break;
             default:
-                infoType = '';
+                infoType = 'School';
                 break;
         }
         return `
         <div class="col-md-3">
-            <h1> ${position}: ${name}</h1>
-            <h2> ID: ${id}</h2>
-            <h2> Email: ${email}</h2>
-            <h2> ${infortype}: ${info}</h2>
+            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                <div class="card-header"> ${position}: ${name}</div>
+                <div class="card-body">
+                <p class="card-text"> ID: ${id}</p>
+                <p class="card-text"> Email: ${email}</p>
+                <p class="card-text"> ${infoType}: ${info}</p>
+                </div>
+            </div>
         </div>`;
     });
 
@@ -116,4 +121,3 @@ function generateHTML (teams) {
   
 
 addEmployee('Manager');
-nextPrompt();
