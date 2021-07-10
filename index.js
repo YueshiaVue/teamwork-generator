@@ -1,7 +1,4 @@
 const inquirer = require("inquirer");
-const manager = require("./lib/manager");
-const engineer = require("./lib/engineer");
-const intern = require("./lib/intern");
 const Employee = require("./lib/employee");
 const Team = require("./lib/team");
 const fs = require("fs");
@@ -108,6 +105,9 @@ function generateHTML (teams) {
       <title>Document</title>
     </head>
     <body>
+        <header>
+            <h1>Avengers Assemble</h1>
+        </header>
       <div class="jumbotron jumbotron-fluid">
       <div class="container">
         <div class="row">
